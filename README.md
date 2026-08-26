@@ -38,20 +38,20 @@
 
 ```mermaid
 graph TD
-    A[Payment Ingestion / Webhook] --> B[FastAPI Agent Workflow]
-    B --> C[Context Collection & Customer History DB]
-    C --> D[ML Feature Extractor]
-    D --> E[XGBoost / ML Model Predictor P(Recovery)]
-    E --> F[Deterministic Decision Engine]
-    F --> G{Policy Guardrail Engine}
+    A["Payment Ingestion / Webhook"] --> B["FastAPI Agent Workflow"]
+    B --> C["Context Collection & History DB"]
+    C --> D["ML Feature Extractor"]
+    D --> E["XGBoost ML Model Predictor"]
+    E --> F["Deterministic Decision Engine"]
+    F --> G{"Policy Guardrail Engine"}
     
-    G -- Violation / High Amount --> H[Escalate to Human Ops Review]
-    G -- Hard Decline / Low Prob --> I[Stop Recovery Automation]
-    G -- Approved Action --> J[PaymentService Abstraction]
+    G -- "Violation / High Amount" --> H["Escalate to Human Ops Review"]
+    G -- "Hard Decline / Low Prob" --> I["Stop Recovery Automation"]
+    G -- "Approved Action" --> J["PaymentService Abstraction"]
     
-    J -- Test Mode / Sim --> K[Razorpay / Simulator Gateway]
-    K --> L[Outcome Recorder & DB Audit Event Stream]
-    L --> M[Next.js Fintech Dashboard]
+    J -- "Test Mode / Simulator" --> K["Razorpay / Simulator Gateway"]
+    K --> L["Outcome Recorder & DB Audit Trail"]
+    L --> M["Next.js Fintech Dashboard"]
 ```
 
 ---
@@ -61,19 +61,19 @@ graph TD
 ```mermaid
 stateDiagram-v2
     [*] --> EVENT_RECEIVED: Failed Payment Ingested
-    EVENT_RECEIVED --> CONTEXT_COLLECTION: Fetch Customer & Payment History
+    EVENT_RECEIVED --> CONTEXT_COLLECTION: Fetch Customer History
     CONTEXT_COLLECTION --> FAILURE_ANALYSIS: Classify Decline Category
-    FAILURE_ANALYSIS --> RECOVERY_PREDICTION: Calculate P(Recovery) via ML
+    FAILURE_ANALYSIS --> RECOVERY_PREDICTION: Calculate Recovery Probability
     RECOVERY_PREDICTION --> RECOVERY_PLAN: Select Recommended Intervention
-    RECOVERY_PLAN --> POLICY_CHECK: Evaluate Guardrail Safety Rules
+    RECOVERY_PLAN --> POLICY_CHECK: Evaluate Guardrail Rules
     
     POLICY_CHECK --> EXECUTE: Policy Approved
-    POLICY_CHECK --> ESCALATE: Rule Violated / High Value Breach
-    POLICY_CHECK --> STOP: Permanent Decline / Prob < Floor
+    POLICY_CHECK --> ESCALATE: Rule Violated / High Value
+    POLICY_CHECK --> STOP: Permanent Decline / Prob Below Floor
     
     EXECUTE --> MEASURE: Execute via PaymentService
-    MEASURE --> AUDIT: Record Recovered Revenue & Retries
-    ESCALATE --> HUMAN_REVIEW: Merchant Ops Manual Action
+    MEASURE --> AUDIT: Record Outcome & Retries
+    ESCALATE --> HUMAN_REVIEW: Merchant Ops Review
     
     HUMAN_REVIEW --> EXECUTE: Manual Approve
     HUMAN_REVIEW --> STOP: Manual Stop
@@ -88,24 +88,106 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
-    Start[Input: Case Data + P(Recovery)] --> PermCheck{Category in Permanent Failures?}
-    PermCheck -- Yes (Fraud/Stolen) --> StopAct[Action: STOP]
-    PermCheck -- No --> AmtCheck{Amount >= ₹50,000?}
+    Start["Input: Case Data + P(Recovery)"] --> PermCheck{"Category in Permanent Failures?"}
+    PermCheck -- "Yes" --> StopAct["Action: STOP"]
+    PermCheck -- "No" --> AmtCheck{"Amount >= 50,000 INR?"}
     
-    AmtCheck -- Yes --> EscAct[Action: ESCALATE]
-    AmtCheck -- No --> RetryCheck{Retry Count >= 3?}
+    AmtCheck -- "Yes" --> EscAct["Action: ESCALATE"]
+    AmtCheck -- "No" --> RetryCheck{"Retry Count >= 3?"}
     
-    RetryCheck -- Yes --> EscAct
-    RetryCheck -- No --> ProbCheck{P(Recovery) < 0.40?}
+    RetryCheck -- "Yes" --> EscAct
+    RetryCheck -- "No" --> ProbCheck{"P(Recovery) < 0.40?"}
     
-    ProbCheck -- Yes --> StopAct
-    ProbCheck -- No --> CatCheck{Failure Category?}
+    ProbCheck -- "Yes" --> StopAct
+    ProbCheck -- "No" --> CatCheck{"Failure Category?"}
     
-    CatCheck -- TRANSIENT_NETWORK --> Retry[Action: RETRY]
-    CatCheck -- INSUFFICIENT_FUNDS --> WaitRetry[Action: WAIT_AND_RETRY]
-    CatCheck -- AUTHENTICATION_REQUIRED --> AuthAction[Action: REQUEST_CUSTOMER_ACTION]
-    CatCheck -- CARD_EXPIRED --> Notif[Action: SEND_RECOVERY_NOTIFICATION]
+    CatCheck -- "TRANSIENT_NETWORK" --> Retry["Action: RETRY"]
+    CatCheck -- "INSUFFICIENT_FUNDS" --> WaitRetry["Action: WAIT_AND_RETRY"]
+    CatCheck -- "AUTHENTICATION_REQUIRED" --> AuthAction["Action: REQUEST_CUSTOMER_ACTION"]
+    CatCheck -- "CARD_EXPIRED" --> Notif["Action: SEND_RECOVERY_NOTIFICATION"]
 ```
+
+---
+
+## Database ER Diagram
+
+```mermaid
+erDiagram
+    CUSTOMERS ||--o{ PAYMENTS : makes
+    CUSTOMERS ||--o{ SUBSCRIPTIONS : owns
+    CUSTOMERS ||--o{ RECOVERY_CASES : has
+    PAYMENTS ||--o{ RECOVERY_CASES : triggers
+    SUBSCRIPTIONS ||--o{ PAYMENTS : generates
+    RECOVERY_CASES ||--o{ RECOVERY_DECISIONS : evaluates
+    RECOVERY_CASES ||--o{ RECOVERY_ATTEMPTS : executes
+    RECOVERY_CASES ||--o{ AUDIT_EVENTS : logs
+    RECOVERY_CASES ||--o{ MODEL_PREDICTIONS : predicts
+
+    CUSTOMERS {
+        string id PK
+        string customer_ref
+        string name
+        string email
+        int tenure_days
+        float historical_success_rate
+        float avg_txn_amount
+    }
+
+    PAYMENTS {
+        string id PK
+        string payment_ref
+        float amount
+        string currency
+        string status
+        string failure_category
+        string payment_method
+    }
+
+    RECOVERY_CASES {
+        string id PK
+        string case_ref
+        string status
+        float amount_at_risk
+        float recovered_amount
+        float recovery_probability
+        int retry_count
+        boolean is_escalated
+    }
+
+    RECOVERY_DECISIONS {
+        string id PK
+        string case_id FK
+        string decision
+        float probability
+        string reason
+    }
+
+    RECOVERY_ATTEMPTS {
+        string id PK
+        string case_id FK
+        int attempt_number
+        string action_type
+        string status
+    }
+
+    AUDIT_EVENTS {
+        string id PK
+        string case_id FK
+        string event_type
+        string actor
+        string action
+        string reason
+        string timestamp
+    }
+
+    MODEL_PREDICTIONS {
+        string id PK
+        string case_id FK
+        string model_version
+        float predicted_probability
+    }
+```
+
 ---
 
 ## Demo Scenario Verification Matrix
@@ -155,3 +237,16 @@ npm run dev
 ```
 Open Web Application in browser: `http://localhost:3000`
 
+---
+
+## Key DB-Computed Metrics Definitions
+
+- **Revenue at Risk**: Total sum of `amount_at_risk` for all active unrecovered cases.
+- **Revenue Recovered**: Total sum of `recovered_amount` for all cases in `RECOVERED` status.
+- **Recovery Rate**: `(Revenue Recovered / Total Revenue at Risk) * 100%`
+- **Attempt Success Rate**: `(Successful Attempts / Total Executed Attempts) * 100%`
+
+---
+
+## License & Credits
+Built for **Razorpay Buildathon** by RevivePay Autonomous AI Engineering Team.
