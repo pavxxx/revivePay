@@ -1,0 +1,40 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTest cache
+.pytest_cache/
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+backend/revivepay.db
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node.js & Next.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

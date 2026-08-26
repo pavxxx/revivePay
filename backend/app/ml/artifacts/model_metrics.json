@@ -1,0 +1,260 @@
+{
+  "model_name": "RevivePay Recovery Predictor (LogisticRegression)",
+  "model_type": "LogisticRegression",
+  "dataset_size": 2000,
+  "precision": 0.7634408602150538,
+  "recall": 0.8765432098765432,
+  "f1_score": 0.8160919540229885,
+  "roc_auc": 0.8098346045975204,
+  "brier_score": 0.1679242015447015,
+  "confusion_matrix": [
+    [
+      91,
+      66
+    ],
+    [
+      30,
+      213
+    ]
+  ],
+  "calibration_curve": [
+    {
+      "predicted": 0.1012904450475118,
+      "actual": 0.08771929824561403
+    },
+    {
+      "predicted": 0.2966723995615064,
+      "actual": 0.3783783783783784
+    },
+    {
+      "predicted": 0.515606146387572,
+      "actual": 0.5441176470588235
+    },
+    {
+      "predicted": 0.7047286657650363,
+      "actual": 0.6477272727272727
+    },
+    {
+      "predicted": 0.8859631527252437,
+      "actual": 0.8666666666666667
+    }
+  ],
+  "feature_importances": {
+    "amount": 8.70865837764685e-05,
+    "log_amount": 0.024422956609090597,
+    "tenure_days": 0.0005131089494985397,
+    "total_payments": 0.007352991446997857,
+    "successful_payments": 0.006573677202492165,
+    "failed_payments": 0.013926668650609741,
+    "historical_success_rate": 0.05143595598062294,
+    "avg_txn_amount": 7.126268890613428e-05,
+    "prior_recovery_attempts": 0.6941559562972269,
+    "days_since_last_success": 0.006439458237190594,
+    "has_active_subscription": 0.7562567869365949,
+    "recent_failure_freq_30d": 0.015782205450072268,
+    "cat_TRANSIENT_NETWORK": 2.0667728901082185,
+    "cat_INSUFFICIENT_FUNDS": 0.6389702005571717,
+    "cat_AUTHENTICATION_REQUIRED": 1.036840750728396,
+    "cat_CARD_EXPIRED": 0.10590910875068292,
+    "cat_PERMANENT_HARD_DECLINE": 2.023521990738302,
+    "cat_FRAUD_OR_STOLEN": 1.5967871029535106,
+    "method_CARD": 0.1651064498394717,
+    "method_UPI": 0.22811159114615415,
+    "method_NETBANKING": 0.15718159314637958,
+    "method_AUTOPAY": 0.21967080892175636
+  },
+  "compared_models": {
+    "LogisticRegression": {
+      "model_name": "LogisticRegression",
+      "precision": 0.7634408602150538,
+      "recall": 0.8765432098765432,
+      "f1_score": 0.8160919540229885,
+      "roc_auc": 0.8098346045975204,
+      "brier_score": 0.1679242015447015,
+      "confusion_matrix": [
+        [
+          91,
+          66
+        ],
+        [
+          30,
+          213
+        ]
+      ],
+      "calibration_curve": [
+        {
+          "predicted": 0.1012904450475118,
+          "actual": 0.08771929824561403
+        },
+        {
+          "predicted": 0.2966723995615064,
+          "actual": 0.3783783783783784
+        },
+        {
+          "predicted": 0.515606146387572,
+          "actual": 0.5441176470588235
+        },
+        {
+          "predicted": 0.7047286657650363,
+          "actual": 0.6477272727272727
+        },
+        {
+          "predicted": 0.8859631527252437,
+          "actual": 0.8666666666666667
+        }
+      ],
+      "feature_importances": {
+        "amount": 8.70865837764685e-05,
+        "log_amount": 0.024422956609090597,
+        "tenure_days": 0.0005131089494985397,
+        "total_payments": 0.007352991446997857,
+        "successful_payments": 0.006573677202492165,
+        "failed_payments": 0.013926668650609741,
+        "historical_success_rate": 0.05143595598062294,
+        "avg_txn_amount": 7.126268890613428e-05,
+        "prior_recovery_attempts": 0.6941559562972269,
+        "days_since_last_success": 0.006439458237190594,
+        "has_active_subscription": 0.7562567869365949,
+        "recent_failure_freq_30d": 0.015782205450072268,
+        "cat_TRANSIENT_NETWORK": 2.0667728901082185,
+        "cat_INSUFFICIENT_FUNDS": 0.6389702005571717,
+        "cat_AUTHENTICATION_REQUIRED": 1.036840750728396,
+        "cat_CARD_EXPIRED": 0.10590910875068292,
+        "cat_PERMANENT_HARD_DECLINE": 2.023521990738302,
+        "cat_FRAUD_OR_STOLEN": 1.5967871029535106,
+        "method_CARD": 0.1651064498394717,
+        "method_UPI": 0.22811159114615415,
+        "method_NETBANKING": 0.15718159314637958,
+        "method_AUTOPAY": 0.21967080892175636
+      }
+    },
+    "RandomForest": {
+      "model_name": "RandomForest",
+      "precision": 0.7401315789473685,
+      "recall": 0.9259259259259259,
+      "f1_score": 0.8226691042047533,
+      "roc_auc": 0.8089171974522292,
+      "brier_score": 0.1688962573455803,
+      "confusion_matrix": [
+        [
+          78,
+          79
+        ],
+        [
+          18,
+          225
+        ]
+      ],
+      "calibration_curve": [
+        {
+          "predicted": 0.1564374230051196,
+          "actual": 0.05555555555555555
+        },
+        {
+          "predicted": 0.28628652471482574,
+          "actual": 0.1935483870967742
+        },
+        {
+          "predicted": 0.5225654501663466,
+          "actual": 0.4777777777777778
+        },
+        {
+          "predicted": 0.708898680372899,
+          "actual": 0.7440476190476191
+        },
+        {
+          "predicted": 0.8601733129281708,
+          "actual": 0.8933333333333333
+        }
+      ],
+      "feature_importances": {
+        "amount": 0.05021899197965743,
+        "log_amount": 0.051265599025564434,
+        "tenure_days": 0.058273656177340157,
+        "total_payments": 0.03694746392187464,
+        "successful_payments": 0.03328604112552042,
+        "failed_payments": 0.027399205214704653,
+        "historical_success_rate": 0.04935722273445954,
+        "avg_txn_amount": 0.05302559761222737,
+        "prior_recovery_attempts": 0.09404749418101983,
+        "days_since_last_success": 0.047109073324852375,
+        "has_active_subscription": 0.020161324358464155,
+        "recent_failure_freq_30d": 0.01568706677809024,
+        "cat_TRANSIENT_NETWORK": 0.10064536507456381,
+        "cat_INSUFFICIENT_FUNDS": 0.021872809105093392,
+        "cat_AUTHENTICATION_REQUIRED": 0.023091796842453487,
+        "cat_CARD_EXPIRED": 0.010592421079158762,
+        "cat_PERMANENT_HARD_DECLINE": 0.17228062660688082,
+        "cat_FRAUD_OR_STOLEN": 0.10896828721498325,
+        "method_CARD": 0.0056478750536289694,
+        "method_UPI": 0.008340310485056502,
+        "method_NETBANKING": 0.0064703916423767445,
+        "method_AUTOPAY": 0.005311380462029156
+      }
+    },
+    "XGBoost": {
+      "model_name": "XGBoost",
+      "precision": 0.75,
+      "recall": 0.8641975308641975,
+      "f1_score": 0.8030592734225621,
+      "roc_auc": 0.7940552016985138,
+      "brier_score": 0.17272025346755981,
+      "confusion_matrix": [
+        [
+          87,
+          70
+        ],
+        [
+          33,
+          210
+        ]
+      ],
+      "calibration_curve": [
+        {
+          "predicted": 0.06741460870232499,
+          "actual": 0.08771929824561403
+        },
+        {
+          "predicted": 0.3172449672387706,
+          "actual": 0.3611111111111111
+        },
+        {
+          "predicted": 0.5003317033251127,
+          "actual": 0.5666666666666667
+        },
+        {
+          "predicted": 0.7008932120729201,
+          "actual": 0.6831683168316832
+        },
+        {
+          "predicted": 0.8905551707091397,
+          "actual": 0.8356164383561644
+        }
+      ],
+      "feature_importances": {
+        "amount": 0.019806325435638428,
+        "log_amount": 0.0,
+        "tenure_days": 0.0197773277759552,
+        "total_payments": 0.02080625481903553,
+        "successful_payments": 0.01624348759651184,
+        "failed_payments": 0.02512430027127266,
+        "historical_success_rate": 0.0249344315379858,
+        "avg_txn_amount": 0.021554583683609962,
+        "prior_recovery_attempts": 0.06605055928230286,
+        "days_since_last_success": 0.019800178706645966,
+        "has_active_subscription": 0.035185832530260086,
+        "recent_failure_freq_30d": 0.021406084299087524,
+        "cat_TRANSIENT_NETWORK": 0.08666810393333435,
+        "cat_INSUFFICIENT_FUNDS": 0.05227390676736832,
+        "cat_AUTHENTICATION_REQUIRED": 0.04939767345786095,
+        "cat_CARD_EXPIRED": 0.03211080655455589,
+        "cat_PERMANENT_HARD_DECLINE": 0.22994472086429596,
+        "cat_FRAUD_OR_STOLEN": 0.18180298805236816,
+        "method_CARD": 0.02521449699997902,
+        "method_UPI": 0.0136993657797575,
+        "method_NETBANKING": 0.025689730420708656,
+        "method_AUTOPAY": 0.012508825398981571
+      }
+    }
+  }
+}
