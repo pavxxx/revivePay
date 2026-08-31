@@ -7,9 +7,31 @@ from app.services.batch_service import run_demo_batch
 def init_db(db: Session):
     """
     Initializes DB tables and seeds default user, policies, and initial demo batch data.
+    Also applies any required one-time schema migrations for existing databases.
     """
     # Create all tables
     Base.metadata.create_all(bind=engine)
+
+    # One-time migration: rename policy_violations_prevented -> guardrail_interventions
+    # (SQLite does not support column renaming directly; we ADD the new column if missing.)
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            cols = [
+                row[1] for row in conn.execute(text("PRAGMA table_info(batch_runs)")).fetchall()
+            ]
+            if "guardrail_interventions" not in cols:
+                conn.execute(text(
+                    "ALTER TABLE batch_runs ADD COLUMN guardrail_interventions INTEGER DEFAULT 0"
+                ))
+                if "policy_violations_prevented" in cols:
+                    conn.execute(text(
+                        "UPDATE batch_runs SET guardrail_interventions = policy_violations_prevented"
+                    ))
+                conn.commit()
+    except Exception:
+        pass  # Non-SQLite databases or already migrated; skip silently.
+
     
     # Check default user
     admin_user = db.query(User).filter(User.email == "admin@revivepay.io").first()

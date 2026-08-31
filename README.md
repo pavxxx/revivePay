@@ -7,7 +7,7 @@
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0+-D70A53.svg)](https://www.sqlalchemy.org)
 [![Razorpay](https://img.shields.io/badge/Razorpay-Test%20Mode-0C2340.svg)](https://razorpay.com)
 
-**RevivePay** is an autonomous revenue recovery platform engineered for high-volume merchant operations. It detects payment failures, predicts recovery probability using machine learning, executes deterministic interventions guarded by policy rules, interacts with payment gateways via a unified `PaymentService` abstraction, and maintains an immutable audit trail.
+**RevivePay** is an autonomous revenue recovery platform engineered for high-volume merchant operations. It detects payment failures, predicts recovery probability using machine learning, executes deterministic interventions guarded by policy rules, interacts with payment gateways via a unified `PaymentService` abstraction, and maintains an append-only audit trail.
 
 > **Zero LLM in Financial Decision Path**: All financial decision making, ML probability inference, policy enforcement, and payment execution operate 100% deterministically without relying on LLMs.
 > **Environment Label**: Operating in **SIMULATION** / **RAZORPAY TEST MODE**. All monetary figures are generated dynamically from database records.
@@ -27,10 +27,10 @@
    - Mandatory safety check enforcing max automated retry limits (default 3), probability floors (e.g. <0.40 -> STOP), high-value amount thresholds (e.g. >= ₹50,000 -> ESCALATE), permanent failure hard stops, and cooldown periods.
 5. **Unified PaymentService Abstraction**:
    - Single interface wrapping both live Razorpay Test Mode API and a deterministic scenario simulator.
-6. **Immutable Audit Trail**:
+6. **Append-Only Audit Trail**:
    - Records every event with actor context (`SYSTEM`, `ML_MODEL`, `DECISION_ENGINE`, `POLICY_ENGINE`, `PAYMENT_SERVICE`, `HUMAN_OPERATOR`), action, reasoning, and metadata.
 7. **Batch Evaluation Engine**:
-   - Executes 500-event demo batches and computes all aggregate KPIs live from database tables.
+   - Executes 500-event demo batches. All KPIs (revenue-at-risk, recovered revenue, recovery rate, attempts, guardrail interventions) are computed exclusively from the current batch's cases — never mixed with prior batches or seeded data.
 
 ---
 
@@ -241,10 +241,13 @@ Open Web Application in browser: `http://localhost:3000`
 
 ## Key DB-Computed Metrics Definitions
 
-- **Revenue at Risk**: Total sum of `amount_at_risk` for all active unrecovered cases.
-- **Revenue Recovered**: Total sum of `recovered_amount` for all cases in `RECOVERED` status.
+All batch metrics are scoped exclusively to the current batch's cases.
+
+- **Revenue at Risk**: Sum of `amount_at_risk` for the current batch's unrecovered cases.
+- **Revenue Recovered**: Sum of `recovered_amount` for the current batch's `RECOVERED` cases.
 - **Recovery Rate**: `(Revenue Recovered / Total Revenue at Risk) * 100%`
 - **Attempt Success Rate**: `(Successful Attempts / Total Executed Attempts) * 100%`
+- **Guardrail Interventions**: Count of cases in the batch where the Policy Guardrail Engine actively blocked a proposed action (`FAILED_VIOLATION` audit record).
 
 ---
 

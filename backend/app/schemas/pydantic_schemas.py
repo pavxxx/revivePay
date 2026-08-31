@@ -148,7 +148,7 @@ class BatchRunResponse(BaseModel):
     escalated_count: int
     stopped_count: int
     avg_recovery_amount: float
-    policy_violations_prevented: int
+    guardrail_interventions: int
     unnecessary_intervention_rate: float
     processing_time_ms: float
     created_at: datetime

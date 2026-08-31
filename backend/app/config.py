@@ -1,5 +1,13 @@
 import os
 
+# Load .env file before reading any environment variables.
+# Falls back silently if python-dotenv is not installed.
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 class Settings:
     PROJECT_NAME: str = "RevivePay Revenue Recovery Engine"
     API_V1_STR: str = "/api"
