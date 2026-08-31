@@ -1,0 +1,30 @@
+# RevivePay Backend Dependencies
+# Generated from actual Python imports across all backend modules.
+# Uses minimum-version constraints to work with both fresh installs and existing envs.
+
+# Web framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.30.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# ML / Data
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+numpy>=1.26.0
+pandas>=2.2.0
+joblib>=1.3.0
+
+# Schema validation
+pydantic>=2.7.0
+
+# Payment gateway (optional; only used when USE_RAZORPAY_REAL=true)
+razorpay>=1.4.0
+
+# Environment loading
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=8.0.0
+httpx>=0.27.0

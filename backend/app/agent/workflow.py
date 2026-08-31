@@ -32,7 +32,7 @@ class AgentWorkflowEngine:
         outcome: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None
     ) -> AuditEvent:
-        """Helper to append an immutable audit log record to the database."""
+        """Helper to append an audit log record to the append-only audit trail in the database."""
         event = AuditEvent(
             case_id=case_id,
             event_type=event_type,

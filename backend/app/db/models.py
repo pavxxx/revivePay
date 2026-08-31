@@ -181,7 +181,7 @@ class BatchRun(Base):
     escalated_count = Column(Integer, default=0)
     stopped_count = Column(Integer, default=0)
     avg_recovery_amount = Column(Float, default=0.0)
-    policy_violations_prevented = Column(Integer, default=0)
+    guardrail_interventions = Column(Integer, default=0)
     unnecessary_intervention_rate = Column(Float, default=0.0)
     processing_time_ms = Column(Float, default=0.0)
     created_at = Column(DateTime(timezone=True), default=utc_now)
